@@ -7,8 +7,9 @@ from git import Repo
 import codecs
 from github import Github
 from pprint import pprint
+
 PATH = os.path.dirname(os.path.abspath(__file__))
-TEMPLATE_PATH = os.path.join(PATH, os.path.join('templates'))
+
 # Args
 parser = argparse.ArgumentParser(description='Sming toolbelt', prog='sming')
 parser.add_argument(
@@ -64,8 +65,6 @@ TEMPLATE_ENVIRONMENT = Environment(
         searchpath="/"
     ),
     trim_blocks=False)
-# print(os.path.join(PATH, os.path.join('templates', args.filename)))
-
 
 class Sming:
     def _render_template(self, template_filename, context):
@@ -90,18 +89,11 @@ class Sming:
         self.clone_template()
 
         walk_dir = os.path.join(os.getcwd(), args.project_name)
-
-        # If your current working directory may change during script execution, it's recommended to
-        # immediately convert program arguments to an absolute path. Then the variable root below will
-        # be an absolute path as well. Example:
-        # walk_dir = os.path.abspath(walk_dir)
-        print('walk_dir (absolute) = ' + os.path.abspath(walk_dir))
-
         for root, subdirs, files in os.walk(walk_dir):
             for file in files:
                 file_path = os.path.join(root, file)
                 print(file_path)
-                if not 'git' in root:
+                if '.git' not in root:
                     context = {'project_name': args.project_name}
                     result = self._render_template(file_path, context)
                     with open(file_path, 'w') as template:
